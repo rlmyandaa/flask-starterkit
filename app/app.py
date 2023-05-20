@@ -14,6 +14,11 @@ from app.ext.sentry import init_sentry
 from app.ext.cache import cache
 
 from app.commands import init_app_cli
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
+db = SQLAlchemy()
+migrate = Migrate()
 
 
 def init_configuration(app: Flask) -> None:
@@ -31,7 +36,7 @@ def init_configuration(app: Flask) -> None:
     app.config.from_pyfile('config.py')
 
 
-def create_app() -> Flask:
+def create_app() -> tuple[Flask, SQLAlchemy, Migrate]:
     app: Flask = Flask(__name__, instance_relative_config=True)
 
     # first, init configurations
@@ -40,7 +45,8 @@ def create_app() -> Flask:
     init_sentry(app)
 
     if len(app.config.get("SQLALCHEMY_DATABASE_URI")):
-        init_database(app)
+        db.init_app(app)
+        migrate.init_app(app, db)
 
     cache.init_app(app)
     register_jinja_mapping(app)
@@ -66,4 +72,4 @@ def create_app() -> Flask:
     # initialize application commands from app/commands
     init_app_cli(app)
 
-    return app
+    return app, db, migrate
