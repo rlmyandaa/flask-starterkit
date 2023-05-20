@@ -1,4 +1,5 @@
 from flask import Blueprint, current_app, render_template
+from .commands import init_blueprint_cli
 
 
 # do not rename "blueprint" variable if you want to use auto import
@@ -20,4 +21,7 @@ def $blueprint_name_route() -> str:  # << TODO: reminder to edit me
         "$blueprint_name/index.jinja2",
         **context
     )
+
+
+init_blueprint_cli(blueprint)
 
