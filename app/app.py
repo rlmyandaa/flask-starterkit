@@ -3,8 +3,6 @@ import os
 from flask import Flask, request, redirect
 from flask_debugtoolbar import DebugToolbarExtension
 
-from app.ext.sqlalchemy.database import init_database
-
 from app import blueprints
 
 from app.jinja import register_jinja_mapping
@@ -19,6 +17,7 @@ from flask_migrate import Migrate
 
 db = SQLAlchemy()
 migrate = Migrate()
+
 
 
 def init_configuration(app: Flask) -> None:
